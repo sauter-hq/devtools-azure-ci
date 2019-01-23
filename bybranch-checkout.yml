@@ -1,0 +1,35 @@
+parameters:
+  clean: false
+
+steps:
+- checkout: self
+  lfs: true
+- script: |
+    set -o errexit ;
+    git config --global credential.helper 'store'
+    echo "https://$(GITHUB_SAUTER_USER):$(GITHUB_SAUTER_TOKEN)@github.ch.sauter-bc.com" > ${HOME}/.git-credentials
+  displayName: 'setup git credentials'
+- script: |
+    set -o errexit ;
+
+    # Separate checkout by branch name
+    current_branch=`echo $(Build.SourceBranch) | sed 's/refs\/heads\///;'`
+    worktree_branch=b/${current_branch}
+    worktree_dir=$(Build.BinariesDirectory)/${current_branch}
+
+    if [ "$(clean)" = "true" ]; then
+      git worktree remove -f ${worktree_dir} || echo "Worktree removal failed";
+      git branch -D ${worktree_branch} || echo "Worktree branch removal failed";
+      rm -rf ${worktree_dir}
+    fi 
+
+    if [ -d ${worktree_dir} ]; then
+      cd ${worktree_dir}
+      git fetch origin
+      git checkout $(Build.SourceVersion) 
+    else
+      git worktree add --track -b ${worktree_branch} ${worktree_dir} origin/${current_branch}
+      cd ${worktree_dir}
+    fi
+    tools/update-submodules.sh --force
+  displayName: 'Checkout branch build worktree'
