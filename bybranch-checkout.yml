@@ -1,4 +1,9 @@
+# bybranch-checkout : ensure each branch get a separate build worktree for 
+#                     stability and to capitalize on incremental compilation time.
+# 
+# This step exports a $(WORKTREE_DIR) variable to other steps of the same job.
 parameters:
+  # Clean the worktree by removing it before trying a fresh checkout again
   clean: false
 
 steps:
@@ -37,4 +42,6 @@ steps:
       git worktree add --track -b ${worktree_branch} ${worktree_dir} origin/${current_branch}
       cd ${worktree_dir}
     fi
+
+    echo "##vso[task.setvariable variable=WORKTREE_DIR]${worktree_dir}"
   displayName: 'Checkout by-branch build worktree'
