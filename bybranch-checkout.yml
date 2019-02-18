@@ -14,9 +14,9 @@ steps:
 
     # Separate checkout by branch name
     if [ "${{Build.Reason}}" = "PullRequest" ]; then
-      current_ref=`echo $(System.PullRequest.SourceBranch)`
+      current_ref=`echo ${{System.PullRequest.SourceBranch}}`
     else
-      current_ref=`echo $(Build.SourceBranch)`
+      current_ref=`echo ${{Build.SourceBranch}}`
     fi
 
     current_branch=`echo ${current_ref} | sed 's/refs\/heads\///;'` 
@@ -32,7 +32,7 @@ steps:
     if [ -d ${worktree_dir} ]; then
       cd ${worktree_dir}
       git fetch origin
-      git checkout ${{Build.SourceVersion}}
+      git checkout $(Build.SourceVersion)
     else
       git worktree add --track -b ${worktree_branch} ${worktree_dir} origin/${current_branch}
       cd ${worktree_dir}
