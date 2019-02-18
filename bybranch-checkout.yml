@@ -31,5 +31,4 @@ steps:
       git worktree add --track -b ${worktree_branch} ${worktree_dir} origin/${current_branch}
       cd ${worktree_dir}
     fi
-    tools/update-submodules.sh --force
   displayName: 'Checkout branch build worktree'
