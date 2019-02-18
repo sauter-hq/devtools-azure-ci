@@ -14,9 +14,9 @@ steps:
 
     # Separate checkout by branch name
     if [ "${{Build.Reason}}" = "PullRequest" ]; then
-      current_ref=`echo ${{System.PullRequest.SourceBranch}}`
+      current_ref=`echo $(System.PullRequest.SourceBranch)`
     else
-      current_ref=`echo ${{Build.SourceBranch}}`
+      current_ref=`echo $(Build.SourceBranch)`
     fi
 
     current_branch=`echo ${current_ref} | sed 's/refs\/heads\///;'` 
