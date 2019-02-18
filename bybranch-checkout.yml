@@ -21,7 +21,7 @@ steps:
 
     current_branch=`echo ${current_ref} | sed 's/refs\/heads\///;'` 
     worktree_branch=b/${current_branch}
-    worktree_dir=${{Build.BinariesDirectory}}/${current_branch}
+    worktree_dir=$(Build.BinariesDirectory)/${current_branch}
 
     if [ "${{parameters.clean}}" = "true" ]; then
       git worktree remove -f ${worktree_dir} || echo "Worktree removal failed";
