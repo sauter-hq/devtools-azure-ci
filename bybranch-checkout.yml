@@ -13,11 +13,11 @@ steps:
     set -o errexit ;
 
     # Separate checkout by branch name
-    current_branch=`git rev-parse --abbrev-ref HEAD` 
+    current_branch=`git symbolic-ref --short HEAD` 
     worktree_branch=b/${current_branch}
     worktree_dir=$(Build.BinariesDirectory)/${current_branch}
 
-    if [ "$(parameters.clean)" = "true" ]; then
+    if [ "${{parameters.clean}}" = "true" ]; then
       git worktree remove -f ${worktree_dir} || echo "Worktree removal failed";
       git branch -D ${worktree_branch} || echo "Worktree branch removal failed";
       rm -rf ${worktree_dir}
