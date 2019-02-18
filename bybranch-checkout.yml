@@ -32,7 +32,7 @@ steps:
     if [ -d ${worktree_dir} ]; then
       cd ${worktree_dir}
       git fetch origin
-      git checkout $(Build.SourceVersion) 
+      git checkout ${{Build.SourceVersion}}
     else
       git worktree add --track -b ${worktree_branch} ${worktree_dir} origin/${current_branch}
       cd ${worktree_dir}
