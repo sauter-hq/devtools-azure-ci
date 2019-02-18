@@ -13,11 +13,11 @@ steps:
     set -o errexit ;
 
     # Separate checkout by branch name
-    current_branch=`echo $(Build.SourceBranch) | sed 's/refs\/heads\///;'`
+    current_branch=`git rev-parse --abbrev-ref HEAD` 
     worktree_branch=b/${current_branch}
     worktree_dir=$(Build.BinariesDirectory)/${current_branch}
 
-    if [ "$(clean)" = "true" ]; then
+    if [ "$(parameters.clean)" = "true" ]; then
       git worktree remove -f ${worktree_dir} || echo "Worktree removal failed";
       git branch -D ${worktree_branch} || echo "Worktree branch removal failed";
       rm -rf ${worktree_dir}
@@ -31,4 +31,4 @@ steps:
       git worktree add --track -b ${worktree_branch} ${worktree_dir} origin/${current_branch}
       cd ${worktree_dir}
     fi
-  displayName: 'Checkout branch build worktree'
+  displayName: 'Checkout by-branch build worktree'
