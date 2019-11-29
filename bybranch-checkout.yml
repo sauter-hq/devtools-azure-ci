@@ -38,6 +38,7 @@ steps:
     echo "Informing about outdated worktrees"
     time_now=$(date +%s); 
     thirty_days_ago=$((${time_now} - (30*24*3600) ));
+    echo "Current directory is : ${PWD}"
     git worktree list | while read worktree; do
 
       worktree_dir_entry=`echo $worktree | cut -f 1 -d" "`; 
