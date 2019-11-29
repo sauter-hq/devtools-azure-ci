@@ -40,6 +40,8 @@ steps:
     thirty_days_ago=$((${time_now} - (30*24*3600) ));
     echo "Current directory is : ${PWD}"
     git worktree list | while read worktree; do
+      
+      echo "Worktree : ${worktree}"
 
       worktree_dir_entry=`echo $worktree | cut -f 1 -d" "`; 
       commit_id=`echo $worktree | cut -f 2 -d" "`; 
@@ -62,6 +64,7 @@ steps:
         df -h
       fi
     done 
+    echo "Finished checking outdated worktree"
 
     # Create or update existing
     if [ -d ${worktree_dir} ]; then
