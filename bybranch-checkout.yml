@@ -35,7 +35,7 @@ steps:
     fi 
 
     # Delete outdated worktree
-    echo "Informing about outdated worktrees, removal to free up space."
+    echo "Removing old worktree, freeing up space."
     df -h $PWD
     time_now=$(date +%s); 
     five_days_ago=$((${time_now} - (5*24*3600) ));
@@ -46,7 +46,7 @@ steps:
       worktree_commit_timestamp=`git show --format="tformat:%ct" -s ${commit_id}`;
 
       if [ ${worktree_commit_timestamp} -lt ${five_days_ago} ] && [ "${worktree_dir_entry}" != "${worktree_dir}" ] && [[ ${worktree_dir_entry} != $(Build.BinariesDirectory)/release* ]]; then
-        echo "${worktree_dir_entry} is older than 30 days, removing to free up space. (timestamp : ${worktree_commit_timestamp})"
+        echo "${worktree_dir_entry} is older than 5 days, removing to free up space. (timestamp : ${worktree_commit_timestamp})"
         git worktree remove -f ${worktree_dir_entry}
         if [ $? -ne 0 ]; then
           echo "Could not remove ${worktree_dir_entry}"
