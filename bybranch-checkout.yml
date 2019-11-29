@@ -23,6 +23,21 @@ steps:
       rm -rf ${worktree_dir}
     fi 
 
+    # Delete outdated worktree
+    time_now=$(date +%s); 
+    thirty_days_ago=$((${time_now} - (30*24*3600) ));
+    git worktree list | while read worktree; do
+
+      worktree_dir_entry=`echo $worktree | cut -f 1 -d" "`; 
+      commit_id=`echo $worktree | cut -f 2 -d" "`; 
+      worktree_commit_timestamp=`git show --format="tformat:%ct" -s ${commit_id}`;
+
+      if [ ${worktree_commit_timestamp} -lt ${thirty_days_ago} ] && [ "${worktree_dir_entry}" != "${worktree_dir}" ]; then
+        echo "${worktree_dir_entry} is older than 30days. (timestamp : ${worktree_commit_timestamp})"
+      fi
+    done 
+
+    # Create or update existing
     if [ -d ${worktree_dir} ]; then
       cd ${worktree_dir}
       git fetch origin
