@@ -46,7 +46,20 @@ steps:
 
       if [ ${worktree_commit_timestamp} -lt ${thirty_days_ago} ] && [ "${worktree_dir_entry}" != "${worktree_dir}" ]
         && [[ ${worktree_dir_entry} != $(Build.BinariesDirectory)/release* ]]; then
-        echo "${worktree_dir_entry} is older than 30days. (timestamp : ${worktree_commit_timestamp})"
+        echo "${worktree_dir_entry} is older than 30 days, removing to free up space. (timestamp : ${worktree_commit_timestamp})"
+        df -h
+        git worktree remove -f ${worktree_dir_entry}
+        if [ $? -ne 0 ]; then
+          echo "Could not remove ${worktree_dir_entry}"
+        fi
+        git worktree prune -v
+        git gc
+        if [ $? -ne 0 ]; then
+          echo "Optimizing git repository failed"
+        fi
+        
+        echo "Size available on current CI Node after worktree removal and repository optimization"
+        df -h
       fi
     done 
 
